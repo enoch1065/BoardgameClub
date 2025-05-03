@@ -1,0 +1,6 @@
+@BgClubApi_HostAddress = http://localhost:5125
+
+GET {{BgClubApi_HostAddress}}/api/Members
+Accept: application/json
+
+###
