@@ -14,12 +14,10 @@ namespace BgClubApi.Controllers
     [ApiController]
     public class MembersController : ControllerBase
     {
-        private readonly BgClubApiContext _context;
         private readonly IMemberRepository _memberRepository;
 
-        public MembersController(BgClubApiContext context, IMemberRepository memberRepository)
+        public MembersController(IMemberRepository memberRepository)
         {
-            _context = context;
             _memberRepository = memberRepository;
         }
 
