@@ -13,7 +13,7 @@ public class MemberRepository : IMemberRepository
     public async Task<IEnumerable<Member>> GetAllMembers()
         => await _context.Members.ToListAsync();
 
-    public async Task<Member> GetMemberById(int id)
+    public async Task<Member?> GetMemberById(int id)
         => await _context.Members.FindAsync(id);
 
     public async Task<bool> MemberExists(int id)

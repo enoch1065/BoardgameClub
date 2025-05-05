@@ -1,8 +1,9 @@
 namespace BgClubApi.Models;
 
-public class Member
+public class Game
 {
     public int Id { get; set; }
     public string? Name { get; set; }
-    public bool IsActive { get; set; }
+    public int MinPlayers { get; set; }
+    public int MaxPlayers { get; set; }
 }

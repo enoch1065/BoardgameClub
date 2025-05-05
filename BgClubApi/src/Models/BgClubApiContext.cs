@@ -10,4 +10,6 @@ public class BgClubApiContext : DbContext
     }
 
     public DbSet<Member> Members { get; set; } = null!;
+
+    public DbSet<Game> Games { get; set; } = null!;
 }

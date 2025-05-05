@@ -12,6 +12,7 @@ builder.Services.AddDbContext<BgClubApiContext>(opt =>
     opt.UseInMemoryDatabase("BgClubDb"));
 
 builder.Services.AddScoped<IMemberRepository, MemberRepository>();
+builder.Services.AddScoped<IGameRepository, GameRepository>();
 
 var app = builder.Build();
 

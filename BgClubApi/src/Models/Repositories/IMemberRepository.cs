@@ -4,7 +4,7 @@ public interface IMemberRepository
 {
     Task<IEnumerable<Member>> GetAllMembers();
 
-    Task<Member> GetMemberById(int id);
+    Task<Member?> GetMemberById(int id);
 
     Task<bool> MemberExists(int id);
 
