@@ -7,4 +7,6 @@ public interface IGameRepository
     Task<Game?> GetGameByName(string name);
 
     Task AddGame(Game game);
+
+    Task UpdateGame(Game game);
 }

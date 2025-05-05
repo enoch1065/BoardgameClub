@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using BgClubApi.Models;
 using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace BgClubApi.Controllers
 {
@@ -15,10 +16,12 @@ namespace BgClubApi.Controllers
     public class MembersController : ControllerBase
     {
         private readonly IMemberRepository _memberRepository;
+        private readonly IGameRepository _gameRepository;
 
-        public MembersController(IMemberRepository memberRepository)
+        public MembersController(IMemberRepository memberRepository, IGameRepository gameRepository)
         {
             _memberRepository = memberRepository;
+            _gameRepository = gameRepository;
         }
 
         // GET: api/Members
@@ -34,7 +37,6 @@ namespace BgClubApi.Controllers
         public async Task<ActionResult<Member>> GetMember(int id)
         {
             var member = await _memberRepository.GetMemberById(id);
-
             if (member == null)
             {
                 return NotFound();
@@ -44,7 +46,6 @@ namespace BgClubApi.Controllers
         }
 
         // PUT: api/Members/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
         public async Task<IActionResult> PutMember(int id, Member member)
         {
@@ -63,7 +64,6 @@ namespace BgClubApi.Controllers
         }
 
         // POST: api/Members
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
         public async Task<ActionResult<Member>> PostMember(Member member)
         {
@@ -82,8 +82,35 @@ namespace BgClubApi.Controllers
             }
 
             await _memberRepository.RemoveMember(member);
-
             return NoContent();
+        }
+
+        [HttpPost("{memberId}/BorrowedGames/{gameName}")]
+        public async Task<ActionResult<Member>> PostBorrowedGame(int memberId, string gameName)
+        {
+            // Get the member who is borrowing a game
+            var member = await _memberRepository.GetMemberById(memberId);
+            if (member == null)
+            {
+                return NotFound("Member not found");
+            }
+
+            // Get the game they want to borrow
+            var game = await _gameRepository.GetGameByName(gameName);
+            if (game == null)
+            {
+                return NotFound("Game Not Found");
+            }
+
+            // If the game is already borrowed, return error
+            if (game.Borrower != null)
+            {
+                return BadRequest("That game is already check out.");
+            }
+
+            game.BorrowerId = memberId;
+            await _gameRepository.UpdateGame(game);
+            return CreatedAtAction(nameof(GetMember), new { id = member.Id }, member);
         }
     }
 }

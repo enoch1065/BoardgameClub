@@ -14,15 +14,16 @@ public class MembersController_Tests
     public async Task GetMembers_ReturnsFullListOfMembers(IEnumerable<Member> members)
     {
         // Arrange - mock repository will return members list when GetAllMembers is called
-        var repositoryMock = new Mock<IMemberRepository>();
-        repositoryMock.Setup(r => r.GetAllMembers()).Returns(Task.FromResult(members));
-        var controller = new MembersController(repositoryMock.Object);
+        var mockMemberRepo = new Mock<IMemberRepository>();
+        mockMemberRepo.Setup(r => r.GetAllMembers()).Returns(Task.FromResult(members));
+        var mockGameRepo = new Mock<IGameRepository>();
+        var controller = new MembersController(mockMemberRepo.Object, mockGameRepo.Object);
 
         // Act
         var controllerActionResult = await controller.GetMembers();
 
         // Assert
-        repositoryMock.Verify(r => r.GetAllMembers());  // Verify that GetAllMembers was called on the mock repo
+        mockMemberRepo.Verify(r => r.GetAllMembers());  // Verify that GetAllMembers was called on the mock repo
         Assert.NotNull(controllerActionResult.Result);
 
         var resultMembers = ((Microsoft.AspNetCore.Mvc.ObjectResult)controllerActionResult.Result).Value as IEnumerable<Member>;
@@ -34,17 +35,18 @@ public class MembersController_Tests
     public async Task GetMember_ValidId_ReturnsMember(Member member)
     {
         // Arrange - mock repository will return a member when GetMemberById is called
-        var repositoryMock = new Mock<IMemberRepository>();
-        repositoryMock
+        var mockMemberRepo = new Mock<IMemberRepository>();
+        mockMemberRepo
             .Setup(r => r.GetMemberById(member.Id))
             .Returns(Task.FromResult((Member?)member));
-        var controller = new MembersController(repositoryMock.Object);
+        var mockGameRepo = new Mock<IGameRepository>();
+        var controller = new MembersController(mockMemberRepo.Object, mockGameRepo.Object);
 
         // Act
         var controllerActionResult = await controller.GetMember(member.Id);
 
         // Assert
-        repositoryMock.Verify(r => r.GetMemberById(member.Id)); // Verify that GetMemberById was called on the mock repo
+        mockMemberRepo.Verify(r => r.GetMemberById(member.Id)); // Verify that GetMemberById was called on the mock repo
         Assert.NotNull(controllerActionResult.Result);
 
         var resultMember = ((Microsoft.AspNetCore.Mvc.ObjectResult)controllerActionResult.Result).Value as Member;
@@ -56,17 +58,18 @@ public class MembersController_Tests
     public async Task GetMember_BadId_ReturnsNotFound(int id)
     {
         // Arrange - mock repository will return NULL when GetMemberById is called
-        var repositoryMock = new Mock<IMemberRepository>();
-        repositoryMock
+        var mockMemberRepo = new Mock<IMemberRepository>();
+        mockMemberRepo
             .Setup(r => r.GetMemberById(id))
             .Returns(Task.FromResult((Member?)null));
-        var controller = new MembersController(repositoryMock.Object);
+        var mockGameRepo = new Mock<IGameRepository>();
+        var controller = new MembersController(mockMemberRepo.Object, mockGameRepo.Object);
 
         // Act
         var controllerActionResult = await controller.GetMember(id);
 
         // Assert
-        repositoryMock.Verify(r => r.GetMemberById(id));    // Verify that GetMemberById was called on the mock repo
+        mockMemberRepo.Verify(r => r.GetMemberById(id));    // Verify that GetMemberById was called on the mock repo
         Assert.NotNull(controllerActionResult.Result);
         Assert.IsType<Microsoft.AspNetCore.Mvc.NotFoundResult>(controllerActionResult.Result); // Verify that controller result is Not Found
     }

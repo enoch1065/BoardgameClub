@@ -8,9 +8,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
-builder.Services.AddDbContext<BgClubApiContext>(opt =>
-    opt.UseInMemoryDatabase("BgClubDb"));
-
+builder.Services.AddDbContext<BgClubApiContext>();
 builder.Services.AddScoped<IMemberRepository, MemberRepository>();
 builder.Services.AddScoped<IGameRepository, GameRepository>();
 

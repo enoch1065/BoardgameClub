@@ -34,7 +34,6 @@ namespace BgClubApi.Controllers
         public async Task<ActionResult<Game>> GetGame(string name)
         {
             var game = await _gameRepository.GetGameByName(name);
-
             if (game == null)
             {
                 return NotFound();
@@ -44,13 +43,11 @@ namespace BgClubApi.Controllers
         }
 
         // POST: api/Games
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost("Games")]
         public async Task<ActionResult<Game>> PostGame(Game game)
         {
             await _gameRepository.AddGame(game);
             return CreatedAtAction(nameof(GetGame), new { name = game.Name }, game);
         }
-
     }
 }

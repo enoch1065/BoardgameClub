@@ -21,4 +21,10 @@ public class GameRepository : IGameRepository
         _context.Games.Add(game);
         await _context.SaveChangesAsync();
     }
+
+    public async Task UpdateGame(Game game)
+    {
+        _context.Entry(game).State = EntityState.Modified;
+        await _context.SaveChangesAsync();
+    }
 }
